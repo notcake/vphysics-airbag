@@ -1,7 +1,10 @@
 ﻿VA = VA or {}
 
 function VA.Print (message)
-	MsgN ("[VPhysics Airbag] " .. message)
+	if epoe then
+		epoe.PushPayload(epoe.IS_MSGN, "[VPhysics Airbag] " .. message)
+	end
+	
 	ServerLog ("[VPhysics Airbag] " .. message .. "\n")
 end
 
