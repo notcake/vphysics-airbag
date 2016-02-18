@@ -6,9 +6,9 @@ Not all VPhysics crashes are caught or prevented by this addon.
 
 Bug reports should be submitted to GitHub at https://github.com/notcake/vphysics-airbag/issues .
 
-Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=626778772
-GitHub: https://github.com/notcake/vphysics-airbag
-Git: https://github.com/notcake/vphysics-airbag.git
+Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=626778772  
+GitHub: https://github.com/notcake/vphysics-airbag  
+Git: https://github.com/notcake/vphysics-airbag.git  
 
 Credits
 ------------------------
