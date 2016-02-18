@@ -1,5 +1,6 @@
 VPhysics Airbag: Server Crash Prevention
 ========================
+Exported from Metastruct code.
 
 This addon attempts to reduce the number of server crashes due to VPhysics.  
 Not all VPhysics crashes are caught or prevented by this addon.
