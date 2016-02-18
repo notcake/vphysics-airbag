@@ -2,5 +2,5 @@
 	"title"  : "VPhysics Airbag - Server Crash Prevention",
 	"type"   : "ServerContent",
 	"tags"   : [ "build" ],
-	"ignore" : [ "addon.jpg", "addon.gma", "*.bat", "*.sh", ".git/*", ".svn/*" ]
+	"ignore" : [ "addon.jpg", "addon.xcf", "addon.gma", "*.bat", "*.sh", ".git/*", ".svn/*", "README.md" ]
 }
