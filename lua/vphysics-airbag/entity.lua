@@ -1,5 +1,7 @@
 VA.Entity = VA.Entity or {}
 
+local PhysObj_IsAsleep = debug.getregistry ().PhysObj.IsAsleep
+
 function VA.Entity.PhysObjEnumerator (ent)
 	local i = 0
 	local physObjCount = ent:GetPhysicsObjectCount ()
@@ -16,10 +18,26 @@ end
 function VA.Entity.IsFinite (ent)
 	return VA.Enumerator.All (VA.Entity.PhysObjEnumerator (ent), VA.PhysObj.IsFinite)
 end
+if Profiler then VA.Entity.IsFinite = Profiler:Wrap (VA.Entity.IsFinite, "VA.Entity.IsFinite") end
 
 function VA.Entity.IsSane (ent)
 	return VA.Enumerator.All (VA.Entity.PhysObjEnumerator (ent), VA.PhysObj.IsSane)
 end
+if Profiler then VA.Entity.IsSane = Profiler:Wrap (VA.Entity.IsSane, "VA.Entity.IsSane") end
+
+function VA.Entity.IsAsleep (ent)
+	return VA.Enumerator.All (VA.Entity.PhysObjEnumerator (ent), PhysObj_IsAsleep)
+end
+if Profiler then VA.Entity.IsAsleep = Profiler:Wrap (VA.Entity.IsAsleep, "VA.Entity.IsAsleep") end
+
+function VA.Entity.IsAwake (ent)
+	return VA.Enumerator.Any (VA.Entity.PhysObjEnumerator (ent),
+		function (physObj)
+			return not PhysObj_IsAsleep (physObj)
+		end
+	)
+end
+if Profiler then VA.Entity.IsAwake = Profiler:Wrap (VA.Entity.IsAwake, "VA.Entity.IsAwake") end
 
 function VA.Entity.IsOctreeSane (ent)
 	return VA.Enumerator.All (VA.Entity.PhysObjEnumerator (ent), VA.PhysObj.IsOctreeSane)
@@ -38,6 +56,8 @@ function VA.Entity.PrintPhysObjs (ent)
 end
 
 function VA.Entity.Process (ent, alreadyRemoving)
+	if Profiler then Profiler:Begin ("VA.Entity.Process") end
+	
 	if ent:IsRagdoll () then
 		-- Ragdoll:PhysicsDestroy results in a crash 100% of the time
 		-- so we have to try to defuse instead.
@@ -75,6 +95,8 @@ function VA.Entity.Process (ent, alreadyRemoving)
 		VA.Entity.PrintPhysObjs (ent)
 		ent:PhysicsDestroy ()
 	end
+	
+	if Profiler then Profiler:End () end
 end
 
 function VA.Entity.ToString (ent)

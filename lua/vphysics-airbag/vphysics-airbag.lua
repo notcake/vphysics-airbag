@@ -39,6 +39,8 @@ VA.Ragdolls.Initialize ()
 
 -- Players are resistant to removal, fix up their PhysObjs
 function VA.ProcessPlayers ()
+	if Profiler then Profiler:Begin ("VA.ProcessPlayers") end
+	
 	for _, ply in pairs (player.GetAll ()) do
 		if not VA.Entity.IsFinite (ply) then
 			VA.Print ("\tFound " .. VA.Entity.ToString (ply) .. " with " .. ply:GetPhysicsObjectCount () .. " PhysObj(s) at [" .. tostring (ply:GetPos ()) .. "] ∠(" .. tostring (ply:GetAngles ()) .. ")")
@@ -59,29 +61,38 @@ function VA.ProcessPlayers ()
 			VA.CrashPrevented (ply, "caused by a non-finite prop colliding with the player.")
 		end
 	end
+	
+	if Profiler then Profiler:End () end
 end
 
 hook.Add ("Think", "VA.Think",
 	function ()
+		if Profiler then Profiler:Begin ("VA.Think") end
+		
 		local shouldProcessPlayers = false
 		
 		for ent in VA.Ragdolls.GetEnumerator () do
-			if not VA.Entity.IsFinite (ent) then
-				local owner = ent.CPPIGetOwner and ent:CPPIGetOwner ()
-				VA.Print ("Non-finite " .. VA.Entity.ToString (ent) .. " owned by " .. VA.Entity.ToString (owner) .. (ent:IsPlayerHolding () and ", held by player" or ""))
-				VA.Entity.Process (ent, false)
-				
-				shouldProcessPlayers = true
-			elseif not VA.Entity.IsSane (ent) then
-				local owner = ent.CPPIGetOwner and ent:CPPIGetOwner ()
-				VA.Print ("Non-sane " .. VA.Entity.ToString (ent) .. " owned by " .. VA.Entity.ToString (owner) .. (ent:IsPlayerHolding () and ", held by player" or ""))
-				VA.Entity.PrintPhysObjs (ent)
+			if VA.Entity.IsAwake (ent) then
+				if not VA.Entity.IsFinite (ent) then
+					local owner = ent.CPPIGetOwner and ent:CPPIGetOwner ()
+					VA.Print ("Non-finite " .. VA.Entity.ToString (ent) .. " owned by " .. VA.Entity.ToString (owner) .. (ent:IsPlayerHolding () and ", held by player" or ""))
+					VA.Entity.Process (ent, false)
+					
+					shouldProcessPlayers = true
+				end
+				-- elseif not VA.Entity.IsSane (ent) then
+				-- 	local owner = ent.CPPIGetOwner and ent:CPPIGetOwner ()
+				-- 	VA.Print ("Non-sane " .. VA.Entity.ToString (ent) .. " owned by " .. VA.Entity.ToString (owner) .. (ent:IsPlayerHolding () and ", held by player" or ""))
+				-- 	VA.Entity.PrintPhysObjs (ent)
+				-- end
 			end
 		end
 		
-		if shouldProcessPlayers then
+		-- if shouldProcessPlayers then
 			VA.ProcessPlayers ()
-		end
+		-- end
+		
+		if Profiler then Profiler:End () end
 	end
 )
 
